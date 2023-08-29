@@ -1,5 +1,5 @@
 const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2D');
+const ctx = canvas.getContext('2d');
 canvas.width = 900;
 canvas.height = 600;
 
@@ -8,7 +8,7 @@ const cellSize = 100;
 const cellGap = 3;
 const gameGrid = [];
 const defenders = [];
-let defenderCost = 100;
+let numberOfResources = 300;
 
 // mouse
 const mouse = {
@@ -76,7 +76,31 @@ class Defender {
         this.timer = 0;
     }
     draw(){
-        ctx.fillStyle
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(this.x,this.y, this.width, this.height);
+        ctx.fillStyle = 'gold';
+        ctx.font = '30px Ariel';
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+    }
+}
+canvas.addEventListener('click', () => {
+    const gridPositionX = mouse.x - (mouse.x % cellSize);
+    const gridPositionY = mouse.y - (mouse.y % cellSize);
+    if (gridPositionY<cellSize) return;
+    for (let i = 0; i < defenders.length; i++) {
+        if (defenders[i].x === gridPositionX && defenders[i].y === gridPositionY) 
+        return;
+    }
+    let defenderCost = 100;
+    if (numberOfResources >= defenderCost) {
+        defenders.push(new Defender(gridPositionX,gridPositionY));
+        numberOfResources -= defenderCost
+    }
+})
+
+let handleDefenders = () => {
+    for (let i = 0; i < defenders.length; i++){
+        defenders[i].draw();
     }
 }
 
@@ -84,10 +108,21 @@ class Defender {
 // enemies
 // resources 
 // utilities (animmation loop & collison detection)
+let handleGameStatus = () => {
+    ctx.fillStyle = 'gold';
+    ctx.font = '30px Ariel';
+    ctx.fillText('Resources: ' + numberOfResources, 20, 55);
+}
+
+
 let animate = () => {
+
+    
     ctx.clearRect(0,0, canvas.width, canvas.height);
     ctx.fillStyle = 'blue';
     ctx.fillRect(0,0,controlsBar.width, controlsBar.height);
+    handleGameGrid();
+    handleDefenders();
     requestAnimationFrame(animate);
 }
 animate();
