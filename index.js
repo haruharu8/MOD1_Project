@@ -15,6 +15,7 @@ let enemiesInterval = 600;
 let frame = 0;
 let gameOver = false;
 const projectiles = [];
+let score = 0;
 
 // mouse
 const mouse = {
@@ -129,9 +130,13 @@ class Defender {
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
     }
     update(){
-        this.timer++;
-        if (this.timer % 100 === 0) {
+        if (this.shooting){
+            this.timer++;
+            if (this.timer % 100 === 0) {
             projectiles.push(new Projectile(this.x + 70, this.y + 50));
+        }
+    } else {
+        this.timer = 0;
         }
     }
 }
@@ -154,6 +159,11 @@ let handleDefenders = () => {
     for (let i = 0; i < defenders.length; i++){
         defenders[i].draw();
         defenders[i].update();
+        if (defenders[i] && collision(defenders[i].y) !== -1){
+            defenders[i].shooting = true;
+        } else {
+            defenders[i].shooting = false;
+        }
         for (let j = 0; j < enemies.length; j++ ) {
             if (defenders[i] && collision(defenders[i], enemies[j])){
                 enemies[j].movement = 0;
@@ -200,7 +210,11 @@ let handleEnemies = () => {
             gameOver = true;
         }
         if (enemies[i].health <= 0) {
-            let gainedResources = enemies[i].
+            let gainedResources = enemies[i].maxHealth/10;
+            numberOfResources += gainedResources;
+            score += gainedResources;
+            const findThisIndex = enemyPositions.indexOf(enemies[i].y);
+            enemyPositions.splice(findThisIndex, 1);
             enemies.splice(i, 1);
             i--;
         }
@@ -219,7 +233,8 @@ let handleEnemies = () => {
 let handleGameStatus = () => {
     ctx.fillStyle = 'gold';
     ctx.font = '30px Ariel';
-    ctx.fillText('Resources: ' + numberOfResources, 20, 55);
+    ctx.fillText('Score: ' + score, 20, 30);
+    ctx.fillText('Resources: ' + numberOfResources, 20, 80);
     if (gameOver){
         ctx.fillStyle ='black';
         ctx.font = '90px Ariel';
@@ -238,7 +253,6 @@ let animate = () => {
     handleProjectiles();
     handleEnemies();
     handleGameStatus();
-    ctx.fillText('Resources: ' + numberOfResources, 20, 55);
     frame++;
     if (!gameOver) requestAnimationFrame(animate);
 }
