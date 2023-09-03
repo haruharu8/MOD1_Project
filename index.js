@@ -14,6 +14,7 @@ const enemyPositions = [];
 let enemiesInterval = 600;
 let frame = 0;
 let gameOver = false;
+const projectiles = [];
 
 // mouse
 const mouse = {
@@ -68,6 +69,46 @@ let handleGameGrid = () => {
 }
 
 // projectiles
+class Projectile {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = 10;
+        this.height = 10;
+        this.power = 20;
+        this.speed = 5;
+    }
+    update(){
+        this.x + this.speed;
+    }
+    draw(){
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+let handleProjectiles = () => {
+    for(let i = 0; i < projectiles.length; i++){
+        projectiles[i].update();
+        projectiles[i].draw();
+
+        for(let j = 0; j < enemies.length; j++) {
+            if (enemies[j] && projectiles[i] && collision(projectiles[i], enemies[j])) {
+                enemies[j].health -= projectiles[i].power;
+                projectiles.splice(i, 1);
+                i--;
+            }
+        }
+
+        if (projectiles[i] && projectiles[i].x > canvas.width - cellSize) {
+            projectiles.splice(i, 1);
+            i--;
+        }
+    }   
+}
+
+
 // defenders
 class Defender {
     constructor(x,y) {
@@ -86,6 +127,12 @@ class Defender {
         ctx.fillStyle = 'gold';
         ctx.font = '30px Ariel';
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+    }
+    update(){
+        this.timer++;
+        if (this.timer % 100 === 0) {
+            projectiles.push(new Projectile(this.x + 70, this.y + 50));
+        }
     }
 }
 canvas.addEventListener('click', () => {
@@ -106,8 +153,9 @@ canvas.addEventListener('click', () => {
 let handleDefenders = () => {
     for (let i = 0; i < defenders.length; i++){
         defenders[i].draw();
+        defenders[i].update();
         for (let j = 0; j < enemies.length; j++ ) {
-            if (collision(defenders[i], enemies[j])){
+            if (defenders[i] && collision(defenders[i], enemies[j])){
                 enemies[j].movement = 0;
                 defenders[i].health -= 0.2;
             }
@@ -140,7 +188,7 @@ class Enemy {
         ctx.fillStyle = 'red';
         ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.fillStyle = 'black';
-        ctx.font = '30px Ariel';
+        ctx.font = '30px Arial';
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
     }
 }
@@ -150,6 +198,11 @@ let handleEnemies = () => {
         enemies[i].draw();
         if (enemies[i].x < 0){
             gameOver = true;
+        }
+        if (enemies[i].health <= 0) {
+            let gainedResources = enemies[i].
+            enemies.splice(i, 1);
+            i--;
         }
     }
     if (frame % enemiesInterval === 0) {
@@ -169,7 +222,7 @@ let handleGameStatus = () => {
     ctx.fillText('Resources: ' + numberOfResources, 20, 55);
     if (gameOver){
         ctx.fillStyle ='black';
-        ctx.font = '60px Ariel';
+        ctx.font = '90px Ariel';
         ctx.fillText('GAME OVER', 135, 330);
     }
 }
@@ -182,6 +235,7 @@ let animate = () => {
     ctx.fillRect(0,0,controlsBar.width, controlsBar.height);
     handleGameGrid();
     handleDefenders();
+    handleProjectiles();
     handleEnemies();
     handleGameStatus();
     ctx.fillText('Resources: ' + numberOfResources, 20, 55);
