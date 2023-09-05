@@ -2,6 +2,10 @@
 
 Tower Defense Game is a simple web-based tower defense game where your goal is to defend your territory from waves of enemy creatures. Place defenders strategically, collect resources, and defeat the enemy waves to win the game.
 
+
+Link to website to play
+https://haruharu8.github.io/MOD1_Project/
+
 ## Motivation
 
 The motivation behind creating this game is to provide a fun and interactive way for users to enjoy a classic tower defense gaming experience in their web browser. It's a project developed for learning and entertainment purposes.
