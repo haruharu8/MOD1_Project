@@ -8,7 +8,7 @@ The motivation behind creating this game is to provide a fun and interactive way
 
 ## Build Status
 
-Currently, the project is in the development stage. There is no continuous integration set up at the moment.
+Currently, the project is in the development stage. There is no continuous integration set up at the moment. Future commits will add sprites and more features.
 
 ## Code Style
 
@@ -38,22 +38,26 @@ The code follows JavaScript best practices and conventions for readability and m
 // Sample code snippet from the game
 // ...
 
-class Cell {
-    constructor (x, y) {
+// projectiles
+class Projectile {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = cellSize;
-        this.height = cellSize;
+        this.width = 10;
+        this.height = 10;
+        this.power = 20;
+        this.speed = 5;
+    }
+    update(){
+        this.x + this.speed;
     }
     draw(){
-        if (mouse.x && mouse.y && collision(this, mouse)) {
-            ctx.strokeStyle = 'black';
-            ctx.strokeRect(this.x, this.y, this.width, this height);
-        }
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
+        ctx.fill();
     }
 }
-
-// ...
 ```
 
 ## Installation
@@ -61,7 +65,7 @@ class Cell {
 To run the game locally, follow these steps:
 
 1. Clone this repository to your local machine.
-2. Open the `index.html` file in a web browser.
+2. Open the `index.html` file in a web browser or open it on live server using VS Code.
 
 ## Tests
 
@@ -81,7 +85,13 @@ Feel free to contribute to this project by creating pull requests or reporting i
 
 ## Credits
 
-This project was inspired by classic tower defense games and was created by [Your Name].
+This project was created by Kelly Siu.
+ChatGBT for helping with the readMe.
+Inspiration came from Plants Vs Zombies.
+Tutorial by Frank's Laboratory for guideline.
+https://www.youtube.com/watch?v=QxYg8-mhhhs&t=2830s
+
+
 
 ## License
 
