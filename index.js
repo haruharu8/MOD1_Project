@@ -82,7 +82,7 @@ class Projectile {
         this.speed = 5;
     }
     update(){
-        this.x + this.speed;
+        this.x += this.speed;
     }
     draw(){
         ctx.fillStyle = 'black';
@@ -90,7 +90,7 @@ class Projectile {
         ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
         ctx.fill();
     }
-}
+}``
 let handleProjectiles = () => {
     for(let i = 0; i < projectiles.length; i++){
         projectiles[i].update();
@@ -161,7 +161,7 @@ let handleDefenders = () => {
     for (let i = 0; i < defenders.length; i++){
         defenders[i].draw();
         defenders[i].update();
-        if (defenders[i] && collision(defenders[i].y) !== -1){
+        if (enemyPositions.indexOf(defenders[i].y) !== -1){
             defenders[i].shooting = true;
         } else {
             defenders[i].shooting = false;
@@ -187,7 +187,7 @@ class Enemy {
         this.x = canvas.width;
         this.y = verticalPosition;
         this.width = cellSize - cellGap * 2;
-        this.health = cellSize - cellGap * 2;
+        this.height = cellSize - cellGap * 2;
         this.speed = Math.random() * 0.2 + 0.4;
         this.movement = this.speed;
         this.health = 100;
