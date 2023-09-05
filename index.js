@@ -236,7 +236,7 @@ const amounts = [20, 30, 40];
 class Resources {
     constructor(){
         this.x = Math.random() * (canvas.width - cellSize);
-        this.y = (Math.floor(Marth.random() * 5) + 1) * cellSize + 25;
+        this.y = (Math.floor(Math.random() * 5) + 1) * cellSize + 25;
         this.width = cellSize * 0.6;
         this.height = cellSize * 0.6;
         this.amount = amounts[Math.floor(Math.random() * amounts.length)];
@@ -256,7 +256,7 @@ let handleResources = () => {
     for (let i = 0; i < resources.length; i++){
         resources[i].draw();
         if (resources[i] && mouse.x && mouse.y && collision(resources[i], mouse)){
-            numberOfResources =+ resources[i].amount;
+            numberOfResources += resources[i].amount;
             resources.splice(i, 1);
             i--;
         }
@@ -275,7 +275,7 @@ let handleGameStatus = () => {
         ctx.font = '90px Ariel';
         ctx.fillText('GAME OVER', 135, 330);
     }
-    if (score > winningScore && enemies.length === 0){
+    if (score >= winningScore && enemies.length === 0){
         ctx.fillStyle = 'black';
         ctx.font = '60px Arial';
         ctx.fillText('Level Complete!', 130, 300);
@@ -320,3 +320,7 @@ function collision (first, second) {
         return true;
     };
 };
+
+window.addEventListener('resize', function(){
+    canvasPosition = canvas.getBoundingClientRect();
+})
